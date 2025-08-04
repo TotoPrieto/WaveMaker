@@ -4,6 +4,8 @@
 
 class StepperController {
 public:
+
+    // Constructor
     StepperController(uint8_t stepPin, uint8_t dirPin, uint8_t enablePin, int stepsTot);
 
     void init();

@@ -1,9 +1,9 @@
 #include "Button.hpp"
 
 //Constructor
-//Pin from button, value when button is pressed, debounce time, and what to do when pressed
-Button::Button(uint8_t pin, bool activeLow, unsigned long debounce, LimitCallback cb)
-    : pin(pin), activeLow(activeLow), triggered(false), debounceDelay(debounce),
+//Pin from button, value when button is pressed, and what to do when pressed
+Button::Button(uint8_t pin, bool activeLow, LimitCallback cb)
+    : pin(pin), activeLow(activeLow), triggered(false),
       lastDebounceTime(0), onPress(cb){
     pinMode(pin, INPUT_PULLUP);
     lastReading = digitalRead(pin);
@@ -23,7 +23,7 @@ void Button::update() {
         lastReading = reading;
     }
 
-    //Anti-rebounce
+    //Anti-rebound
     if ((millis() - lastDebounceTime) > debounceDelay) {
         //If the limit switch is pressed
         if (reading == activeState && !triggered) {
@@ -38,6 +38,7 @@ void Button::update() {
 }
 
 
+//Check if the button is pressed depending on button's resistance
 bool Button::isPressed() const {
     bool reading = digitalRead(pin);
     return (activeLow ? (reading == LOW) : (reading == HIGH));

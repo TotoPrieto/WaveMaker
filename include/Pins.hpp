@@ -5,4 +5,5 @@
 #define LIMIT_MAX_PIN  11
 #define POWER_BUTTON_PIN  14
 #define RESET_BUTTON_PIN  15
+//This steps are the ones I needed for the distance to travel 
 #define STEPS_TOT    -1550
