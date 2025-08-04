@@ -1,10 +1,10 @@
 #include "Button.hpp"
 
 
-Button::Button(uint8_t pin, bool activeLow, unsigned long debounce)
+Button::Button(uint8_t pin, bool activeLow, unsigned long debounce, LimitCallback cb)
     : pin(pin), activeLow(activeLow), triggered(false), debounceDelay(debounce),
-      lastDebounceTime(0), onPress(cb), onRelease(cb) {
-    pinMode(pin, INPUT_PULLUP); // para ambos tipos
+      lastDebounceTime(0), onPress(cb){
+    pinMode(pin, INPUT_PULLUP);
     lastReading = digitalRead(pin);
 }
 
@@ -23,16 +23,15 @@ void Button::update() {
         if (reading == activeState && !triggered) {
             triggered = true;
             if (onPress) onPress();
-        } else if (reading != activeState && triggered) {
+        } else if (reading != activeState) {
             triggered = false;
-            if (onRelease) onRelease();
         }
     }
 }
 
-/*
+
 bool Button::isPressed() const {
     bool reading = digitalRead(pin);
     return (activeLow ? (reading == LOW) : (reading == HIGH));
 }
-    */
+    

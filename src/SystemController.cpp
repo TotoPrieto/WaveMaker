@@ -1,19 +1,17 @@
 #include "SystemController.hpp"
+#include "StepperController.hpp"
 #include "Pins.hpp"
 #include <Arduino.h>
 
 SystemController::SystemController()
-  : stepper(STEP_PIN, DIR_PIN, ENABLE_PIN, STEPS_TOT, LIMIT_MIN_PIN, LIMIT_MAX_PIN),
-    minSwitch(LIMIT_MIN_PIN), maxSwitch(LIMIT_MAX_PIN),
-    powerButton(POWER_BUTTON_PIN), resetButton(RESET_BUTTON_PIN),
+  : stepper(STEP_PIN, DIR_PIN, ENABLE_PIN, STEPS_TOT),
+    powerButton(POWER_BUTTON_PIN, false, debounce, nullptr), 
+    resetButton(RESET_BUTTON_PIN, false, debounce, nullptr),
     systemOn(false) {}
 
 void SystemController::init() {
-  powerButton.init();
-  resetButton.init();
   stepper.init();
-  minSwitch.init();
-  maxSwitch.init();
+
 }
 
 void SystemController::update() {

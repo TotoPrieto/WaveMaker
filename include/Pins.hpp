@@ -3,6 +3,6 @@
 #define ENABLE_PIN     8
 #define LIMIT_MIN_PIN  9
 #define LIMIT_MAX_PIN  11
-#define POWER_BUTTON_PIN  
-#define RESET_BUTTON_PIN  
+#define POWER_BUTTON_PIN  10
+#define RESET_BUTTON_PIN  12
 #define STEPS_TOT    -1550

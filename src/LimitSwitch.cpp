@@ -1,12 +1,15 @@
 #include "LimitSwitch.hpp"
 #include "Pins.hpp"
+#include "Button.hpp"
 
 
 LimitSwitch::LimitSwitch(uint8_t pin, LimitCallback cb)
-: pin(pin), lastState(HIGH), triggered(false), lastDebounceTime(0), onPress(cb) {
+//: pin(pin), lastState(HIGH), triggered(false), lastDebounceTime(0), onPress(cb) 
+{
     pinMode(pin, INPUT_PULLUP);
+    Button(pin, true, debounceDelay, cb);
 }
-
+/*
 void LimitSwitch::update() {
     bool reading = digitalRead(pin);
 
@@ -27,3 +30,4 @@ void LimitSwitch::update() {
         }
     }
 }
+    */

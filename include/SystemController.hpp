@@ -11,8 +11,8 @@ public:
 
 private:
   StepperController stepper;
-  LimitSwitch minSwitch;
-  LimitSwitch maxSwitch;
+  //LimitSwitch minSwitch;
+  //LimitSwitch maxSwitch;
   Button powerButton;
   Button resetButton;
 
@@ -20,4 +20,6 @@ private:
 
   void checkPower();
   void checkReset();
+
+  static const unsigned long debounce = 50;
 };
