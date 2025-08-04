@@ -1,17 +1,18 @@
 #include <Arduino.h>
 #include "StepperController.hpp"
-//#include "LimitSwitch.hpp"
 #include "Button.hpp"
-//#include "SystemController.hpp"
 #include "Pins.hpp"
 
 static const unsigned long debounce = 50;
 
+bool systemOn;
+
 StepperController controller(STEP_PIN, DIR_PIN, ENABLE_PIN, STEPS_TOT);
 
-Button powerButton(POWER_BUTTON_PIN, false, debounce, nullptr);
-Button resetButton(RESET_BUTTON_PIN, false, debounce, nullptr);
-bool systemOn(false);
+Button powerButton(POWER_BUTTON_PIN, true, debounce, []() {
+    systemOn = !systemOn;
+});
+Button resetButton(RESET_BUTTON_PIN, true, debounce, nullptr);
 
 // Define limit switches with callbacks for handling triggers 
 
@@ -28,34 +29,38 @@ Button maxSwitch(LIMIT_MAX_PIN,true, debounce, []() {
 
 
 void setup() {
+    systemOn = false;
     controller.init();
-    //buttonController.init();
 }
 
+/*
 void checkPower() {
+    powerButton.update();
   if (powerButton.isPressed()) {
     // Toggle the system state
     systemOn = !systemOn;
-    digitalWrite(ENABLE_PIN, systemOn ? LOW : HIGH);
   }
 }
+  */
 
 void checkReset() {
+  resetButton.update();
   if (resetButton.isPressed()) {
     controller.init();
   }
 }
 
+
 // Checks values of limit switches, buttons, and updates the stepper controller
 void loop() {
-    checkPower();
+  //  checkPower();
+    powerButton.update();
     checkReset();
-    minSwitch.update();
-    maxSwitch.update();
+    //Just work when the system is on
     if (systemOn) {
-
-        controller.update();
+      minSwitch.update();
+      maxSwitch.update();  
+      controller.update();
     }
-    //buttonController.update();
 }
 
