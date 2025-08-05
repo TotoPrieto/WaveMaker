@@ -31,13 +31,15 @@ Included features:
 The mechanical structure was designed using **AutoCAD** and **Blender**. Below are 3D rendered images of the model:
 
 ### Side View  
-![Side View](images/side-view.png)
+<img width="640" height="480" alt="image" src="https://github.com/user-attachments/assets/289b0f49-b8ff-476e-942c-33fa3424a3c2" />
 
 ### Front View  
-![Front View](images/front-view.png)
+<img width="640" height="480" alt="image" src="https://github.com/user-attachments/assets/818abb8b-24a4-4f60-8223-b956de0bac30" />
+
 
 ### Bottom View  
-![Bottom View](images/bottom-view.png)
+<img width="640" height="480" alt="image" src="https://github.com/user-attachments/assets/ed0e7198-c8e2-440d-9bc8-9e8de77d6e47" />
+
 
 ## ⚙️ Installation
 
@@ -47,3 +49,17 @@ The mechanical structure was designed using **AutoCAD** and **Blender**. Below a
 4. Compile and upload the firmware.
 
 ## 📁 Project Structure
+
+WAVEGENERATOR/
+├── .pio/
+├── .vscode/
+├── include/ # Header files
+│ ├── Button.hpp
+│ ├── Pins.hpp
+│ └── StepperController.hpp
+├── lib/ 
+├── src/ # Source code in C++
+│ ├── Button.cpp
+│ ├── main.cpp
+│ └── StepperController.cpp
+└──
