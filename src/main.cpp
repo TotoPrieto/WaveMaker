@@ -8,12 +8,12 @@ bool systemOn;
 //Define the stepper controller with the pins and total steps
 StepperController controller(STEP_PIN, DIR_PIN, ENABLE_PIN, STEPS_TOT);
 
-// Define power button that toggles the system state when pressed
+// Define power button that toggles the system state when pressed. Mine is active low
 Button powerButton(POWER_BUTTON_PIN, true, []() {
     systemOn = !systemOn;
 });
-// Define reset button 
-Button resetButton(RESET_BUTTON_PIN, true, nullptr);
+// Define reset button. Mine is active high
+Button resetButton(RESET_BUTTON_PIN, false, nullptr);
 
 //Define minimum limit switch that toggle direction when pressed
 Button minSwitch(LIMIT_MIN_PIN,true, []() {
