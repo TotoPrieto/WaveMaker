@@ -50,16 +50,27 @@ The mechanical structure was designed using **AutoCAD** and **Blender**. Below a
 
 ## 📁 Project Structure
 
+```
 WAVEGENERATOR/
 ├── .pio/
 ├── .vscode/
-├── include/ # Header files
-│ ├── Button.hpp
-│ ├── Pins.hpp
-│ └── StepperController.hpp
+├── include/              # Header files
+│   ├── Button.hpp
+│   ├── Pins.hpp
+│   └── StepperController.hpp
 ├── lib/ 
-├── src/ # Source code in C++
-│ ├── Button.cpp
-│ ├── main.cpp
-│ └── StepperController.cpp
-└──
+├── src/                  # Source code in C++
+│   ├── Button.cpp
+│   ├── main.cpp
+│──  └── StepperController.cpp
+```
+
+## ✒️ Authors
+
+Project developed by **Tomas Prieto De Francia** based on previous work by **Facundo Mosquera**, under the LEICI Laboratory at the **Universidad Nacional de La Plata (UNLP)**.
+
+## 🪪 License
+
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).  
+Feel free to use, modify, and share it for personal, academic, or commercial purposes.
+
