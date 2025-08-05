@@ -63,6 +63,7 @@ WAVEGENERATOR/
 │   ├── Button.cpp
 │   ├── main.cpp
 │──  └── StepperController.cpp
+├── 3D Models/            # Models Files
 ```
 
 ## ✒️ Authors
