@@ -14,7 +14,8 @@ The system uses a vertical linear actuator driven by a stepper motor, moving a w
 - NEMA17 Stepper Motor, 1.8º
 - 24V 3A Power Supply  
 - 2 Limit Switches  
-- Power and Reset Buttons
+- Power, Reset and speed mode Buttons
+- Potentiometer
 
 ### 💻 Software
 
@@ -24,7 +25,9 @@ Included features:
 
 - Homing routine using limit switches  
 - Stepper control for vertical movement along Z-axis  
-- Error handling and movement boundaries  
+- Error handling and movement boundaries
+- Selectable speed modes via button
+- Amplitude control via analog potentiometer
 
 ## 🧱 3D Modeling
 
