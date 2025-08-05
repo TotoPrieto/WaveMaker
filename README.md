@@ -11,7 +11,7 @@ The system uses a vertical linear actuator driven by a stepper motor, moving a w
 - Arduino UNO  
 - CNC Shield V3 for Arduino  
 - A4988 Stepper Motor Driver  
-- NEMA17 Stepper Motor, 1.8º (SC42STH47AC-504AF)  
+- NEMA17 Stepper Motor, 1.8º
 - 24V 3A Power Supply  
 - 2 Limit Switches  
 - Power and Reset Buttons
