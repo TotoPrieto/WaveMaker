@@ -2,27 +2,27 @@
 #include "Pins.hpp"
 #include <Arduino.h>
 
-StepperController::StepperController(uint8_t stepPin, uint8_t dirPin, uint8_t enablePin, int stepsTot)
+// int stepsTot
+StepperController::StepperController(uint8_t stepPin, uint8_t dirPin, uint8_t enablePin) 
 : stepper(AccelStepper::DRIVER, stepPin, dirPin),
   enablePin(enablePin),
-  stepsTot(stepsTot),
   movingToMin(true) {}
 
 void StepperController::init() {
     pinMode(enablePin, OUTPUT);
     digitalWrite(enablePin, LOW);
-
-    stepper.setMaxSpeed(300);
-    stepper.setAcceleration(2000);
+    currentSpeedMode = 0;
+    stepper.setMaxSpeed(1000);
+    stepper.setAcceleration(4000);
     homingSequence();
 
-    stepper.moveTo(stepsTot);
+    stepper.moveTo(-1550); // Cambien stepsTot por valor inicial
     movingToMin = true;
 }
 
 // Homing sequence to find the maximum position and position zero
 void StepperController::homingSequence() {
-    stepper.setSpeed(150);
+    stepper.setSpeed(600);
     // Move to the maximum position until the limit switch is pressed
     while (digitalRead(LIMIT_MAX_PIN) == HIGH) {
         stepper.runSpeed();
@@ -37,14 +37,14 @@ void StepperController::homingSequence() {
 }
 
 // Rehoming sequence
-void StepperController::rehomingSequence() {
+void StepperController::rehomingSequence(int steps_Tot) {
     stepper.stop();
     // Move back so limit switch is no longer pressed
     stepper.move(-50);
     while (stepper.distanceToGo() != 0) stepper.run();
     // Set the current position as zero
     stepper.setCurrentPosition(0);
-    stepper.moveTo(stepsTot);
+    stepper.moveTo(steps_Tot);
     movingToMin = true;
 }
 
@@ -56,15 +56,35 @@ void StepperController::handleMinTrigger() {
 }
 
 // In case the maximum limit switch is pressed, rehome zero position
-void StepperController::handleMaxTrigger() {
-    rehomingSequence();
+void StepperController::handleMaxTrigger(int steps_Tot) {
+    rehomingSequence(steps_Tot);
 }
 
 // Update the stepper position when stepper completes its movement
-void StepperController::update() {
+void StepperController::update(int steps_Tot) {
     if (stepper.distanceToGo() == 0) {
-        stepper.moveTo(movingToMin ? 0 : stepsTot);
+        stepper.moveTo(movingToMin ? 0 : steps_Tot);
         movingToMin = !movingToMin;
     }
     stepper.run();
+}
+
+// Change speed mode when the speed button is pressed
+// There are 3 speed modes: slow, medium, and fast
+void StepperController::changeSpeedMode() {
+    currentSpeedMode = (currentSpeedMode + 1) % 3;
+    switch (currentSpeedMode) {
+        case 0:
+            stepper.setMaxSpeed(1000);
+            stepper.setAcceleration(4000);
+            break;
+        case 1:
+            stepper.setMaxSpeed(1500);
+            stepper.setAcceleration(4000);
+            break;
+        case 2:
+            stepper.setMaxSpeed(2000);
+            stepper.setAcceleration(4000);
+            break;
+    }
 }

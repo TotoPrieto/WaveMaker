@@ -5,5 +5,8 @@
 #define LIMIT_MAX_PIN  11
 #define POWER_BUTTON_PIN  10
 #define RESET_BUTTON_PIN  14
-//This steps are the ones I needed for the distance to travel 
-#define STEPS_TOT    -1550
+#define SPEED_BUTTON_PIN  15
+#define POTENTIOMETER_PIN  16
+
+#define MAX_STEPS    -1550 // Maximum steps for the stepper motor to make in my case
+#define MIN_STEPS    -900   // Minimum steps for the stepper motor 
