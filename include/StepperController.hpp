@@ -13,6 +13,8 @@ public:
     void handleMinTrigger();
     void handleMaxTrigger(int steps_Tot);
     void changeSpeedMode();
+    void emergencyStop();
+    void enable(int steps_Tot);
 private:
     AccelStepper stepper;
     uint8_t enablePin;

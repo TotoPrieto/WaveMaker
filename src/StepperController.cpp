@@ -88,3 +88,26 @@ void StepperController::changeSpeedMode() {
             break;
     }
 }
+
+// Enable the stepper motor
+void StepperController::enable(int steps_Tot) {
+    //Enable the motor
+    digitalWrite(enablePin, LOW);
+    
+    //Set the previous movement without changing direction when the motor is stopped
+    if (stepper.distanceToGo() == 0) {
+        stepper.moveTo(movingToMin ? steps_Tot : 0);
+    }
+}
+
+// Disable the stepper motor for safety
+void StepperController::emergencyStop() {
+    // Stop any current movement immediately
+    stepper.stop();
+    
+    // Force immediate stop
+    stepper.setCurrentPosition(stepper.currentPosition());
+    
+    // Disable the motor
+    digitalWrite(enablePin, HIGH); 
+}
