@@ -3,17 +3,28 @@
 #include "Button.hpp"
 #include "Pins.hpp"
 
+//Initial total steps
 int steps_Tot = MAX_STEPS;
-bool systemOn;
+//State of the system: ON or OFF
+volatile bool systemOn = false;
 //Define the stepper controller with the pins and total steps
 StepperController controller(STEP_PIN, DIR_PIN, ENABLE_PIN);
 
-//Define power button that toggles the system state when pressed. Mine is active low
+
+//Define reset button. Mine is active high
+Button resetButton(RESET_BUTTON_PIN, true, []() {
+controller.init();
+});
+
+//Power button to toggle the system state and enable/disable the motor
 Button powerButton(POWER_BUTTON_PIN, true, []() {
     systemOn = !systemOn;
+    if (systemOn) {
+        controller.enable(steps_Tot);
+    } else {
+        controller.emergencyStop();
+    }
 });
-//Define reset button. Mine is active high
-Button resetButton(RESET_BUTTON_PIN, true, nullptr);
 
 //Define minimum limit switch that toggle direction when pressed
 Button minSwitch(LIMIT_MIN_PIN,true, []() {
@@ -33,16 +44,15 @@ Button speedButton(SPEED_BUTTON_PIN, true, []() {
 void setup() {
     //When the system starts, it is off
     systemOn = false;
+    
+    //Initialize the stepper controller
     controller.init();
+    
+    // Configure power button pin for interrupt
+    pinMode(POWER_BUTTON_PIN, INPUT_PULLUP);
 }
 
-void checkReset() {
-  resetButton.update();
-  if (resetButton.isPressed()) {
-    controller.init();
-  }
-}
-
+//Read the potentiometer and map its value to my range of steps
 void checkPotentiometer() {
   // Read the potentiometer value
   int potValue = analogRead(POTENTIOMETER_PIN);
@@ -50,10 +60,11 @@ void checkPotentiometer() {
   steps_Tot = map(potValue, 0, 1023, MAX_STEPS, MIN_STEPS);
 }
 
-// Checks values of limit switches, buttons, and updates the stepper controller
+
+// Checks values of limit switches, buttons, potentiometer and updates the stepper controller
 void loop() {
     powerButton.update();
-    checkReset();
+    resetButton.update();
     speedButton.update();
     checkPotentiometer();
     //Just works when the system is ON
@@ -63,4 +74,3 @@ void loop() {
       controller.update(steps_Tot);
     }
 }
-
