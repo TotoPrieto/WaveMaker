@@ -8,5 +8,5 @@
 #define SPEED_BUTTON_PIN  15
 #define POTENTIOMETER_PIN  16
 
-#define MAX_STEPS    -1550 // Maximum steps for the stepper motor to make in my case
-#define MIN_STEPS    -900   // Minimum steps for the stepper motor 
+#define MAX_STEPS    1550 // Maximum steps for the stepper motor to make in my case
+#define MIN_STEPS    900   // Minimum steps for the stepper motor 

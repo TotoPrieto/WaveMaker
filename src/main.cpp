@@ -28,12 +28,12 @@ Button powerButton(POWER_BUTTON_PIN, true, []() {
 
 //Define minimum limit switch that toggle direction when pressed
 Button minSwitch(LIMIT_MIN_PIN,true, []() {
-    controller.handleMinTrigger();
+    controller.handleMinTrigger(steps_Tot);
 });
 
 //Define maximum limit switch that rehomes the zero position and toggles direction when pressed
 Button maxSwitch(LIMIT_MAX_PIN,true, []() {
-    controller.handleMaxTrigger(steps_Tot);
+    controller.handleMaxTrigger();
 });
 
 //Define speed mode button. Mine is active low

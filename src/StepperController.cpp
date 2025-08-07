@@ -16,31 +16,30 @@ void StepperController::init() {
     stepper.setAcceleration(4000);
     homingSequence();
 
-    stepper.moveTo(-1550); // Cambien stepsTot por valor inicial
-    movingToMin = true;
+    stepper.moveTo(1550); // Cambien stepsTot por valor inicial
+    movingToMin = false;
 }
 
-// Homing sequence to find the maximum position and position zero
+// Homing sequence to find the minimum position and position zero
 void StepperController::homingSequence() {
-    stepper.setSpeed(600);
-    // Move to the maximum position until the limit switch is pressed
-    while (digitalRead(LIMIT_MAX_PIN) == HIGH) {
+    stepper.setSpeed(-600);
+    // Move to the minimum position until the limit switch is pressed
+    while (digitalRead(LIMIT_MIN_PIN) == HIGH) {
         stepper.runSpeed();
     }
     stepper.setSpeed(0);
     // Move back so limit switch is no longer pressed
-    stepper.move(-50);
+    stepper.move(50);
     while (stepper.distanceToGo() != 0) stepper.run();
     // Set the current position as zero
     stepper.setCurrentPosition(0);
-    stepper.setSpeed(300);
 }
 
 // Rehoming sequence
 void StepperController::rehomingSequence(int steps_Tot) {
     stepper.stop();
     // Move back so limit switch is no longer pressed
-    stepper.move(-50);
+    stepper.move(50);
     while (stepper.distanceToGo() != 0) stepper.run();
     // Set the current position as zero
     stepper.setCurrentPosition(0);
@@ -49,21 +48,21 @@ void StepperController::rehomingSequence(int steps_Tot) {
 }
 
 // In case minimum limit switch is pressed, stop and just move to zero position
-void StepperController::handleMinTrigger() {
+void StepperController::handleMinTrigger(int steps_Tot) {
+    rehomingSequence(0);
+}
+
+// In case the maximum limit switch is pressed, rehome zero position
+void StepperController::handleMaxTrigger() {
     stepper.stop();
     stepper.moveTo(0);
     movingToMin = false;
 }
 
-// In case the maximum limit switch is pressed, rehome zero position
-void StepperController::handleMaxTrigger(int steps_Tot) {
-    rehomingSequence(steps_Tot);
-}
-
 // Update the stepper position when stepper completes its movement
 void StepperController::update(int steps_Tot) {
     if (stepper.distanceToGo() == 0) {
-        stepper.moveTo(movingToMin ? 0 : steps_Tot);
+        stepper.moveTo(movingToMin ? steps_Tot : 0);
         movingToMin = !movingToMin;
     }
     stepper.run();
@@ -79,11 +78,11 @@ void StepperController::changeSpeedMode() {
             stepper.setAcceleration(4000);
             break;
         case 1:
-            stepper.setMaxSpeed(1500);
+            stepper.setMaxSpeed(2200);
             stepper.setAcceleration(4000);
             break;
         case 2:
-            stepper.setMaxSpeed(2000);
+            stepper.setMaxSpeed(2200);
             stepper.setAcceleration(4000);
             break;
     }
