@@ -8,7 +8,7 @@ StepperController::StepperController(uint8_t stepPin, uint8_t dirPin, uint8_t en
   enablePin(enablePin),
   movingToMin(true) {}
 
-void StepperController::init() {
+void StepperController::init(int steps_Tot) {
     pinMode(enablePin, OUTPUT);
     digitalWrite(enablePin, LOW);
     currentSpeedMode = 0;
@@ -16,7 +16,7 @@ void StepperController::init() {
     stepper.setAcceleration(4000);
     homingSequence();
 
-    stepper.moveTo(1550); // Cambien stepsTot por valor inicial
+    stepper.moveTo(steps_Tot); // Cambien stepsTot por valor inicial
     movingToMin = false;
 }
 

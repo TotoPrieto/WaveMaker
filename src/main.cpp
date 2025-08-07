@@ -13,7 +13,7 @@ StepperController controller(STEP_PIN, DIR_PIN, ENABLE_PIN);
 
 //Define reset button. Mine is active high
 Button resetButton(RESET_BUTTON_PIN, true, []() {
-controller.init();
+controller.init(steps_Tot);
 });
 
 //Power button to toggle the system state and enable/disable the motor
@@ -41,16 +41,6 @@ Button speedButton(SPEED_BUTTON_PIN, true, []() {
     controller.changeSpeedMode();
 });
 
-void setup() {
-    //When the system starts, it is off
-    systemOn = false;
-    
-    //Initialize the stepper controller
-    controller.init();
-    
-    // Configure power button pin for interrupt
-    pinMode(POWER_BUTTON_PIN, INPUT_PULLUP);
-}
 
 //Read the potentiometer and map its value to my range of steps
 void checkPotentiometer() {
@@ -60,6 +50,19 @@ void checkPotentiometer() {
   steps_Tot = map(potValue, 0, 1023, MAX_STEPS, MIN_STEPS);
 }
 
+
+void setup() {
+    //When the system starts, it is off
+    systemOn = false;
+    
+    checkPotentiometer();
+
+    //Initialize the stepper controller
+    controller.init(steps_Tot);
+    
+    // Configure power button pin for interrupt
+    pinMode(POWER_BUTTON_PIN, INPUT_PULLUP);
+}
 
 // Checks values of limit switches, buttons, potentiometer and updates the stepper controller
 void loop() {
