@@ -1,6 +1,6 @@
 # 🌊 WaveMaker
 
-**WaveMaker** is a wave generator developed at the **LEICI Laboratory** of the **Facultad de Ingenieria - UNLP**, designed to simulate wave motion inside a small water tank. It was created to test various wave amplitudes and speeds, with the final goal of supporting the study of energy harvesting systems placed inside the tank (a piston-based generator – not part of this project).
+**WaveMaker** is a wave generator developed at the **LEICI Laboratory** of the **Facultad de Ingenieria - UNLP**, designed to simulate wave motion inside a small water tank. It was created to test various wave amplitudes and speeds, with the final goal of supporting the study of waves energy harvesting systems placed inside the tank (a oscillating water column – not part of this project).
 
 ## 🛠️ Technical Description
 
@@ -29,7 +29,7 @@ Included features:
 - Selectable speed modes via button
 - Amplitude control via analog potentiometer
 
-## 🧱 3D Modeling
+## 📐 3D Modeling
 
 The mechanical structure was designed using **AutoCAD** and **Blender**. Below are 3D rendered images of the model:
 
@@ -71,7 +71,7 @@ WAVEGENERATOR/
 
 ## ✒️ Authors
 
-Project developed by **Tomas Prieto De Francia** based on previous work by **Facundo Mosquera**, under the LEICI Laboratory at the **Universidad Nacional de La Plata (UNLP)**.
+Project developed by **Tomas Prieto De Francia**, in colaboration with **Jeronimo Jose More** and **Facundo Mosquera**, and based on previous work by **Facundo Mosquera**, under the LEICI Laboratory at the **Universidad Nacional de La Plata (UNLP)**.
 
 ## 🪪 License
 
