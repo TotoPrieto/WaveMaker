@@ -33,7 +33,7 @@ Button minSwitch(LIMIT_MIN_PIN,true, []() {
 
 //Define maximum limit switch that rehomes the zero position and toggles direction when pressed
 Button maxSwitch(LIMIT_MAX_PIN,true, []() {
-    controller.handleMaxTrigger();
+    controller.handleMaxTrigger(steps_Tot);
 });
 
 //Define speed mode button. Mine is active low

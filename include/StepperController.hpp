@@ -11,7 +11,7 @@ public:
     void init(int steps_Tot);
     void update(int steps_Tot);
     void handleMinTrigger(int steps_Tot);
-    void handleMaxTrigger();
+    void handleMaxTrigger(int steps_Tot);
     void changeSpeedMode();
     void emergencyStop();
     void enable(int steps_Tot);
