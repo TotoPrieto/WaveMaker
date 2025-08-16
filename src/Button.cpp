@@ -1,15 +1,12 @@
 #include "Button.hpp"
 
-//Constructor
-//Pin from button, value when button is pressed, and what to do when pressed
+//Constructor. Parameters are: Pin from button, value when button is pressed, and what to do when pressed
 Button::Button(uint8_t pin, bool activeLow, LimitCallback cb)
     : pin(pin), activeLow(activeLow), triggered(false),
       lastDebounceTime(0), onPress(cb){
     pinMode(pin, INPUT_PULLUP);
     lastReading = digitalRead(pin);
 }
-
-
 
 void Button::update() {
     //Read the current button state
@@ -36,7 +33,6 @@ void Button::update() {
         }
     }
 }
-
 
 //Check if the button is pressed depending on button's resistance
 bool Button::isPressed() const {

@@ -10,8 +10,9 @@ volatile bool systemOn = false;
 //Define the stepper controller with the pins and total steps
 StepperController controller(STEP_PIN, DIR_PIN, ENABLE_PIN);
 
+//My three buttons and both limit switches are active low
 
-//Define reset button. Mine is active high
+//Reset button. Does init action
 Button resetButton(RESET_BUTTON_PIN, true, []() {
 controller.init(steps_Tot);
 });
@@ -26,19 +27,19 @@ Button powerButton(POWER_BUTTON_PIN, true, []() {
     }
 });
 
-//Define minimum limit switch that toggle direction when pressed
+//Speed mode button. Changes how the motor steps
+Button changeSpeedButton(SPEED_MODE_PIN, true, []() {
+    controller.changeSpeedMode();
+});
+
+//Minimum limit switch
 Button minSwitch(LIMIT_MIN_PIN,true, []() {
     controller.handleMinTrigger(steps_Tot);
 });
 
-//Define maximum limit switch that rehomes the zero position and toggles direction when pressed
+//Maximum limit switch
 Button maxSwitch(LIMIT_MAX_PIN,true, []() {
-    controller.handleMaxTrigger(steps_Tot);
-});
-
-//Define speed mode button. Mine is active low
-Button speedButton(SPEED_BUTTON_PIN, true, []() {
-    controller.changeSpeedMode();
+    controller.handleMaxTrigger();
 });
 
 
@@ -50,11 +51,12 @@ void checkPotentiometer() {
   steps_Tot = map(potValue, 0, 1023, MAX_STEPS, MIN_STEPS);
 }
 
-
+//Initial setup
 void setup() {
     //When the system starts, it is off
     systemOn = false;
-    
+
+    //Check the initial position of the potentiometer
     checkPotentiometer();
 
     //Initialize the stepper controller
@@ -68,12 +70,12 @@ void setup() {
 void loop() {
     powerButton.update();
     resetButton.update();
-    speedButton.update();
     checkPotentiometer();
+    changeSpeedButton.update();
     //Just works when the system is ON
     if (systemOn) {
-      minSwitch.update();
-      maxSwitch.update();  
-      controller.update(steps_Tot);
+        minSwitch.update();
+        maxSwitch.update();
+        controller.update(steps_Tot);
     }
 }

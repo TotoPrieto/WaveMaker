@@ -4,13 +4,10 @@
 using LimitCallback = void(*)();
 
 class Button {
+
 public:
-
-    // Constructor
     Button(uint8_t pin, bool activeLow, LimitCallback cb);
-
     void update();
-
     bool isPressed() const;
 
 private:
@@ -22,5 +19,4 @@ private:
 
     LimitCallback onPress;
     unsigned long debounceDelay = 50;
-
   };

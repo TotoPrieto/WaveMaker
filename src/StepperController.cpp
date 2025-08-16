@@ -2,144 +2,160 @@
 #include "Pins.hpp"
 #include <Arduino.h>
 
-// int stepsTot
+// Constructor
 StepperController::StepperController(uint8_t stepPin, uint8_t dirPin, uint8_t enablePin) 
 : stepper(AccelStepper::DRIVER, stepPin, dirPin),
   enablePin(enablePin),
   movingToMin(true) {}
 
+// Initialize the stepper motor
 void StepperController::init(int steps_Tot) {
     pinMode(enablePin, OUTPUT);
     digitalWrite(enablePin, LOW);
-    currentSpeedMode = 0;
+    //Values for step with acceleration
     stepper.setMaxSpeed(5000);
-    stepper.setAcceleration(2000);
-    homingSequence();
     stepper.setAcceleration(3000);
-    stepper.moveTo(2000); // Cambien stepsTot por valor inicial
+
+    homingSequence();
+    //Values for step with constant speed
+    stepper.setSpeed(1000);
+
+    currentSpeedMode = 0;
 }
 
-// Homing sequence to find the minimum position and position zero
+// Homing sequence to find the minimum position and declare the zero
 void StepperController::homingSequence() {
-    //stepper.setSpeed(-1500);
-    stepper.setCurrentPosition(0);
 
-    stepper.moveTo(-2000);
-    //int initialSpeed = stepper.speed();
-    //int acceleration = stepper.acceleration();
-    //stepper.setMaxSpeed(2000);
-    //stepper.setAcceleration(2000);
     // Move to the minimum position until the limit switch is pressed
+    stepper.setCurrentPosition(0);
+    stepper.moveTo(-2000);
     while (digitalRead(LIMIT_MIN_PIN) == HIGH) {
         stepper.run();
     }
-
     stepper.stop();
-    delayMicroseconds(5000);
-    // Move back so limit switch is no longer pressed
     stepper.setCurrentPosition(0);
+    //Change direction to positive
     movingToMin = false;
-    //stepper.move(200);
-    //stepper.runToPosition();
-    // Set the current position as zero
-    //stepper.setCurrentPosition(0);
-    //stepper.setMaxSpeed(initialSpeed);
-    //stepper.setAcceleration(acceleration);
-}
-
-// Rehoming sequence
-void StepperController::rehomingSequence(int steps_Tot) {
-    // Move back so limit switch is no longer pressed
-    stepper.setCurrentPosition(0);
-//    stepper.move(200);
-//    stepper.runToPosition();
-    // Set the current position as zero
-//    stepper.setCurrentPosition(0);
-    stepper.moveTo(steps_Tot);
-//    movingToMin = true;
-}
-
-// In case minimum limit switch is pressed, stop and just move to zero position
-void StepperController::handleMinTrigger(int steps_Tot) {
-    stepper.setSpeed(0);
-    stepper.stop();
-    delayMicroseconds(5000);
-    rehomingSequence(steps_Tot);
-
-    movingToMin = false;
-}
-
-// In case the maximum limit switch is pressed, rehome zero position
-void StepperController::handleMaxTrigger(int steps_Tot) {
-    stepper.setSpeed(0);
-    stepper.stop();
-    delayMicroseconds(5000);
-    homingSequence();
     stepper.moveTo(2000);
+    
 }
 
-// Update the stepper position when stepper completes its movement
-void StepperController::update(int steps_Tot) {    
-    //stepper.setSpeed(1000); // Set a constant speed for the stepper
-    //stepper.runSpeedToPosition();
-    //stepper.run();
-    if (movingToMin) {
-        stepper.run();
-    }else{
-        stepper.setSpeed(1000);
-        stepper.moveTo(steps_Tot);
-        stepper.runToPosition();
-        stepper.setSpeed(0);
-        delayMicroseconds(5000);
+
+// In case minimum limit switch is pressed then stop, declare zero position and set destination
+void StepperController::handleMinTrigger(int steps_Tot) {
+    // Set the destination based on the current speed mode
+    switch(currentSpeedMode){
+        case 0:
+            //The destination is defined with the potenciometer
+            destinationMin = steps_Tot;
+            break;
+        case 1: 
+            //Much higher than MAX_STEPS in order to ensure it reaches the limit
+            destinationMin = 2200;
+            break;
+        case 2:
+            //Much higher than MAX_STEPS in order to ensure it reaches the limit
+            destinationMin = 2200;
+            break;
+    }
+
+    //"IF sentence" to avoid problems
+    if (stepper.distanceToGo() != 0) {
         stepper.stop();
-        stepper.moveTo(-50);
+        stepper.setCurrentPosition(0);
+        stepper.moveTo(destinationMin);
+        movingToMin = false;
+    }
+}
+
+// In case the maximum limit switch is pressed then stop, declare zero position(helps to stop suddenly) and set destination
+void StepperController::handleMaxTrigger() {
+    //"IF sentence" to avoid problems
+    if (stepper.distanceToGo() != 0) {
+        stepper.stop();
+        stepper.setCurrentPosition(0);
+        //Much lower than zero in order to ensure it reaches the limit
+        stepper.moveTo(-2200);
         movingToMin = true;
     }
 }
 
-// Change speed mode when the speed button is pressed
-// There are 3 speed modes: slow, medium, and fast
-void StepperController::changeSpeedMode() {
-    currentSpeedMode = (currentSpeedMode + 1) % 4;
-    switch (currentSpeedMode) {
+
+//Update the stepper position when stepper completes its movement
+void StepperController::update(int steps_Tot) {
+    switch(currentSpeedMode) {
+ 
         case 0:
-            // Para RPM=600
-            stepper.setMaxSpeed(5000);
-            stepper.setAcceleration(3000);
+        //This mode changes the speed depending the destination. The range doesn't touch de limit switch
+            //If moving to -Z, moves with acceleration
+            if (movingToMin) {
+                // Move towards the minimum position with acceleration
+                stepper.run();
+                // If the stepper has reached the destination, change direction manually
+                if (stepper.distanceToGo() == 0) {
+                    stepper.stop();
+                    movingToMin = false;
+                    // Sets the next position to go that doesn't touch the limit switch
+                    stepper.moveTo(steps_Tot);
+                    // Sets values for the other direction
+                    stepper.setSpeed(1000);
+                }
+            }else{
+                //If moving to +Z, moves with constant speed (no acceleration)
+                stepper.runSpeedToPosition();
+                if (stepper.distanceToGo() == 0) {
+                    stepper.stop();
+                    movingToMin = true;
+                    // Sets the next position to go that doesn't touch the limit switch
+                    stepper.moveTo(100);
+                    // Sets values for the other direction
+                    stepper.setMaxSpeed(9000);
+                    stepper.setAcceleration(3000);
+            }
             break;
+
         case 1:
-            // Ya probado y no funciona
-            stepper.setMaxSpeed(5000);
-            stepper.setAcceleration(3500);
+        //This mode goes from limit switch to limit switch at constant speed
+            stepper.setSpeed(1000);
+            stepper.runSpeedToPosition();
             break;
+
         case 2:
-            // Nunca probado
-            stepper.setMaxSpeed(7000);
-            stepper.setAcceleration(3000);
+        //This mode goes from limit switch to limit switch with acceleration/deceleration
+            stepper.run();
             break;
-        case 3:
-            // Nunca probado
-            stepper.setMaxSpeed(9000);
-            stepper.setAcceleration(3000);
-            break;
+        }
     }
 }
 
 // Enable the stepper motor
 void StepperController::enable(int steps_Tot) {
+
+    // Checks the actual destination depending the mode to avoid changing it unexpectedly
+    switch(currentSpeedMode){
+        case 0:
+            destinationMin = steps_Tot;
+            break;
+        case 1: 
+            destinationMin = 2200;
+            break;
+        case 2:
+            destinationMin = 2200;
+            break;
+    }
     //Enable the motor
     digitalWrite(enablePin, LOW);
     
     //Set the previous movement without changing direction when the motor is stopped
     if (stepper.distanceToGo() == 0) {
-        stepper.moveTo(movingToMin ? 0 : steps_Tot);
+        stepper.moveTo(movingToMin ? 0 : destinationMin);
     }
 }
 
-// Disable the stepper motor for safety
+// Disable the stepper motor
 void StepperController::emergencyStop() {
     // Stop any current movement immediately
-    //stepper.setSpeed(0);
+    stepper.setSpeed(0);
     stepper.stop();
     
     // Force immediate stop
@@ -147,4 +163,18 @@ void StepperController::emergencyStop() {
     
     // Disable the motor
     digitalWrite(enablePin, HIGH); 
+}
+
+// Change the speed mode and perform homing if necessary to avoid problems
+void StepperController::changeSpeedMode() {
+    currentSpeedMode = (currentSpeedMode + 1) % 3;
+    stepper.stop();
+        //Do homing in case sistem is ON
+    if (digitalRead(enablePin) == LOW) {
+        homingSequence();
+    }
+    //Set all values of speed
+    stepper.setSpeed(1000);
+    stepper.setMaxSpeed(3000);
+    stepper.setAcceleration(2000);
 }
