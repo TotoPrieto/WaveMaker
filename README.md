@@ -54,7 +54,6 @@ The system includes **three selectable speed modes** using the dedicated speed s
 - Mode 1 focuses on **wave height control** (amplitude adjustment).  
 - Modes 2 and 3 focus on **full-stroke chaotic wave generation** but differ in motor acceleration profiles.
 
-
 ## 📐 3D Modeling
 
 The mechanical structure was designed using **AutoCAD** and **Blender**. Below are 3D rendered images of the model:
@@ -68,7 +67,6 @@ The mechanical structure was designed using **AutoCAD** and **Blender**. Below a
 
 ### Bottom View  
 <img width="640" height="480" alt="image" src="https://github.com/user-attachments/assets/ed0e7198-c8e2-440d-9bc8-9e8de77d6e47" />
-
 
 ## ⚙️ Installation
 
@@ -103,4 +101,3 @@ Project developed by **Tomas Prieto De Francia**, in colaboration with **Jeronim
 
 This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).  
 Feel free to use, modify, and share it for personal, academic, or commercial purposes.
-
