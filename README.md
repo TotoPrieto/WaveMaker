@@ -29,6 +29,32 @@ Included features:
 - Selectable speed modes via button
 - Amplitude control via analog potentiometer
 
+## 🎚️ Speed Modes
+
+The system includes **three selectable speed modes** using the dedicated speed selector button. Each mode modifies the way the stepper motor drives the vertical actuator, demonstrating different wave behaviors in the tank.
+
+### Mode 1 – Variable Amplitude with Acceleration
+- **Description:** The motor moves with acceleration and deceleration, and the amplitude of movement is adjustable using the analog potentiometer.
+- **Implementation:** Uses `stepper.run()` from the `<AccelStepper.h>` library.
+- **Purpose:** Demonstrates how changing the stroke amplitude directly affects the wave size, allowing for controlled testing of wave heights.
+
+### Mode 2 – Constant Speed (No Acceleration)
+- **Description:** The motor moves from one limit switch to the opposite one at a fixed speed, without acceleration or deceleration.
+- **Implementation:** Uses `stepper.runSpeedToPosition()` from the `<AccelStepper.h>` library.
+- **Purpose:** Simulates waves with a more "chaotic" surface, useful for observing the behavior inside the oscillating water column.
+
+### Mode 3 – Accelerated Travel Between Limits
+- **Description:** Similar to Mode 2, but movement between limit switches includes acceleration and deceleration.
+- **Implementation:** Uses `stepper.run()` from the `<AccelStepper.h>` library.
+- **Purpose:** Offers a different approach to crossing the entire stroke, still producing chaotic waves but with smoother motion transitions.
+
+---
+
+**Summary:**  
+- Mode 1 focuses on **wave height control** (amplitude adjustment).  
+- Modes 2 and 3 focus on **full-stroke chaotic wave generation** but differ in motor acceleration profiles.
+
+
 ## 📐 3D Modeling
 
 The mechanical structure was designed using **AutoCAD** and **Blender**. Below are 3D rendered images of the model:
