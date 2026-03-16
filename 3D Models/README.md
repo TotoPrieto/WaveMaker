@@ -22,3 +22,7 @@ This repository contains 3D model files (`.stl`) designed for the mechanical par
 - The wedge is a hollow structure used to generate waves inside the tank.
 - Comes with a **removable top lid** that can be screwed in place.
 - The hollow body allows for optional filling (e.g., sand, water, weights) to **increase mass and wave impact**.
+
+### Control Button Enclosure
+
+An additional 3D printable enclosure for the WaveMaker control buttons.
